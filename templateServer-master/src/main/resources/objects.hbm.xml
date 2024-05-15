@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+
+    <!--example-->
+    <class name="com.ashcollege.entities.Client" table="clients" lazy="false">
+        <id name="id" type="int" column="id">
+            <generator class="native"/>
+        </id>
+        <property name="firstName" type="string" column="first_name"/>
+        <property name="lastName" type="string" column="last_name"/>
+    </class>
+
+    <class name="com.ashcollege.entities.Student" table="students" lazy="false">
+        <id name="id" type="int" column="id">
+            <generator class="native"/>
+        </id>
+        <property name="firstName" type="string" column="first_name"/>
+        <property name="lastName" type="string" column="last_name"/>
+        <property name="grade" type="int" column="grade"/>
+        <property name="age" type="int" column="age"/>
+        <property name="department" type="string" column="department"/>
+    </class>
+
+    <class name="com.ashcollege.entities.User" table="users" lazy="false">
+        <id name="id" type="int" column="id">
+            <generator class="native"/>
+        </id>
+        <property name="name" type="string" column="name"/>
+        <property name="password" type="string" column="password"/>
+        <property name="secret" type="string" column="secret"/>
+        <many-to-one name="college" column="college_id"
+                     class="com.ashcollege.entities.College"/>
+    </class>
+
+    <class name="com.ashcollege.entities.Note" table="notes" lazy="false">
+        <id name="id" type="int" column="id">
+            <generator class="native"/>
+        </id>
+        <property name="content" type="string" column="content"/>
+        <property name="date" type="java.util.Date" column="date"/>
+        <many-to-one name="owner" column="owner_id"
+                     class="com.ashcollege.entities.User"/>
+    </class>
+
+    <class name="com.ashcollege.entities.College" table="colleges" lazy="false">
+        <id name="id" type="int" column="id">
+            <generator class="native"/>
+        </id>
+        <property name="name" type="string" column="name"/>
+    </class>
+
+    <!--    example2-->
+    <!--    <many-to-one name="object" column="object_id"-->
+    <!--                 class="com.ashcollege.entities.OtherClass"/>-->
+
+
+</hibernate-mapping>
