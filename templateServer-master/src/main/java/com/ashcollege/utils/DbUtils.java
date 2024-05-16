@@ -128,18 +128,7 @@ public class DbUtils {
 }
 
 
-//    public void updateBalance(User user, double newBalance){
-//        try {
-//            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO gambling_web_users (name, password,email,balance) VALUES ( ? , ?, ?,? )");
-//            preparedStatement.setString(1, user.getName());
-//            preparedStatement.setString(2, user.getPassword());
-//            preparedStatement.setString(3, user.getEmail());
-//            preparedStatement.setDouble(4, newBalance);
-//            preparedStatement.executeUpdate();
-//        } catch (SQLException e){
-//            e.printStackTrace();
-//        }
-//    }
+
 
 
 

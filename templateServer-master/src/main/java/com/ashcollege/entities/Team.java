@@ -4,6 +4,8 @@ import java.util.Random;
 
 public class Team {
     private final int MAX_SKILLS_NUM=60;
+    private final int DEAFULT_POINTS_START=0;
+    private final int INCREASE_SKILLS_AFTER_WIN=60;
     Random random = new Random();
     private String name;
     private int point;
@@ -12,7 +14,7 @@ public class Team {
 
     public Team(String name ) {
         this.name = name;
-       this.point = 0;
+       this.point = DEAFULT_POINTS_START;
         this.skills = random.nextFloat(MAX_SKILLS_NUM);
     }
 
@@ -20,7 +22,7 @@ public class Team {
     public Team(){};
     public void upDateSkillByHome(){
         if (this.home){
-            skills+=5;
+            skills+=INCREASE_SKILLS_AFTER_WIN;
         }
     }
 

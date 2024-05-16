@@ -5,6 +5,11 @@ import com.ashcollege.entities.Team;
 import java.util.*;
 public class Season extends Game {
     public final int BET_TIME = 30000;
+    public final int START_CYCLE_NUMBER = 1;
+    private static final int GAME_ONE_ID=1;
+    private static final int GAME_TWO_ID=2;
+    private static final int GAME_THREE_ID=3;
+    private static final int GAME_FOUR_ID=4;
     private Team team1 = new Team("Arsenal");
     private Team team2 = new Team("Chelsea");
     private Team team3 = new Team("Liverpool");
@@ -27,20 +32,20 @@ public class Season extends Game {
         this.game2=new Game(teams[1],teams[6]);
         this.game3=new Game(teams[2],teams[5]);
         this.game4=new Game(teams[3],teams[4]);
-        this.cycleNumber=1;
+        this.cycleNumber=START_CYCLE_NUMBER;
         this.timeToBet = true;
         this.arrangedTeamsByPoint = this.teams;
     }
 
-        public void passUpSeasonTeam(){
+        public void passUpSeasonTeam(){ // TODO להוסיף ל8 משחקים
         this.cycleNumber++;
         switch (this.cycleNumber) {
-            case 1: // פתרון להמשך של הthred לחלק הבא של הפונ'
+            case GAME_ONE_ID: // פתרון להמשך של הthred לחלק הבא של הפונ'
                // משחק ראשון כבר מותאם מעצם בניית המשחקים
                 System.out.println("errors in cycleNumber");
                 break;
 
-            case 2: // מעבר למחזור 2
+            case GAME_TWO_ID: // מעבר למחזור 2
                 this.game1.setGuest(teams[2]);
                 this.game2.setHome(teams[1]);
                 this.game2.setGuest(teams[3]);
@@ -48,9 +53,13 @@ public class Season extends Game {
                 this.game3.setGuest(teams[7]);
                 this.game4.setHome(teams[5]);
                 this.game4.setGuest(teams[6]);
+                this.game1.betRat();
+                this.game2.betRat();
+                this.game3.betRat();
+                this.game4.betRat();
                 break;
 
-            case 3: //מעבר למחזור 3
+            case GAME_THREE_ID: //מעבר למחזור 3
                 this.game1.setGuest(this.teams[3]);
                 this.game2.setHome(this.teams[2]);
                 this.game2.setGuest(this.teams[1]);
@@ -58,9 +67,13 @@ public class Season extends Game {
                 this.game3.setGuest(this.teams[7]);
                 this.game4.setHome(this.teams[4]);
                 this.game4.setGuest(this.teams[6]);
+                this.game1.betRat();
+                this.game2.betRat();
+                this.game3.betRat();
+                this.game4.betRat();
                 break;
 
-            case 4: // מעבר למחזור 4
+            case GAME_FOUR_ID: // מעבר למחזור 4
                 this.game1.setGuest(this.teams[4]);
                 this.game2.setHome(this.teams[1]);
                 this.game2.setGuest(this.teams[5]);
@@ -68,7 +81,14 @@ public class Season extends Game {
                 this.game3.setGuest(this.teams[6]);
                 this.game4.setHome(this.teams[3]);
                 this.game4.setGuest(this.teams[7]);
+                this.game1.betRat();
+                this.game2.betRat();
+                this.game3.betRat();
+                this.game4.betRat();
                 break;
+
+
+
 
             default:
                 System.out.println("cases over!");

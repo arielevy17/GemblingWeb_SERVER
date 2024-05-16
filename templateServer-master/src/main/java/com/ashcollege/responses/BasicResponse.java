@@ -1,6 +1,7 @@
 package com.ashcollege.responses;
 public class BasicResponse {
     private static final int DEFAULT_ID=-1;
+    private static final int DEFAULT_BALANCE=0;
     private boolean success;
     private int id;
     private Integer errorCode;
@@ -10,7 +11,7 @@ public class BasicResponse {
         this.success = success;
         this.id=id;
         this.errorCode = errorCode;
-        this.balance=0;
+        this.balance=DEFAULT_BALANCE;
     }
 
     public BasicResponse(){

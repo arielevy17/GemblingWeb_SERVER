@@ -23,20 +23,22 @@ import java.util.List;
 
 @RestController
 public class GeneralController {
-    private final int GAME_ONE_ID='1';
-private final int GAME_TWO_ID='2';
-private final int GAME_THREE_ID='3';
-private final int GAME_FOUR_ID='4';
+    private static final int GAME_ONE_ID=1;
+private static final int GAME_TWO_ID=2;
+private static final int GAME_THREE_ID=3;
+private static final int GAME_FOUR_ID=4;
     private static final int USER_LOGIN_DETAIL_WRONG=1;
     private static final int USER_ALREADY_EXIST=2;
     private static final int USER_PASSWORD_IS_WEEK=3;
     private static final int YOUR_BALANCE_IS_SMALLER_THEN_BET=4;
     private static final int GAME_WAS_BEGIN=5;
     private static final int BALANCE_START_SUM=1000;
+    private final int ALL_GAME_NUMBER=4;
+    private final int PASS_TO_THE_NEXT=1;
     private final int GAME_TIME=30000;
+    private final int PASSWORD_LENGTH=9;
     private final int BET_TIME=30000;
     private int id;
-    private Game game1;
 
     private Season season = new Season(); // שיבוץ הקבוצות לרשימה פעם1:
     List<User> usersList = new ArrayList<>();
@@ -46,13 +48,6 @@ private final int GAME_FOUR_ID='4';
 
     @Autowired
     private Persist persist;
-
-//        @PostConstruct
-//        public void init () {
-//            User user1 = new User("arie", "123456789a", "a@gmail.com",500);
-//            User user2 = new User("emma", "123456789e", "e@gmail.com",750);
-//
-//        }
 
         // חיבור למסד נתונים ושאיבת נתונים ממנו עובד. לראות האם ואיך למשוך את הID לבדוק אם יש בו צורך בכלל . ולראות איפה נכנס סכום כסף
     private void createDbConnection(String username, String password){
@@ -112,17 +107,16 @@ private final int GAME_FOUR_ID='4';
 
     @RequestMapping(value = "/get_game_golles" ,method = {RequestMethod.GET, RequestMethod.POST})
     public Season getBetGolles() {
-        if (this.season.getCycleNumber() <= 4) {
+        if (this.season.getCycleNumber() <= ALL_GAME_NUMBER) {
             this.season.startGameSeason();
             while (true) {
-                if (this.season.getCycleNumber() <= 4 && this.season.isGamesOvers()) {
+                if (this.season.getCycleNumber() <= ALL_GAME_NUMBER && this.season.isGamesOvers()) {
                     this.season.margeTeams();
                     this.season.passUpSeasonTeam();
                     break;
                 }
             }
         }
-
             return this.season;
         }
 
@@ -133,42 +127,47 @@ private final int GAME_FOUR_ID='4';
             return this.season.isGameWasBegin();
         }
 
-    
-//    TODO:   לבדוק!!,לא עובד גורם לקיסה
 
     @RequestMapping(value = "/send_bet" ,method = {RequestMethod.GET, RequestMethod.POST})
     public  BasicResponse setBetDetails(int gameId,String betAmount, char myGuess) {
         BasicResponse basicResponse = new BasicResponse();
         int castBetAmount=Integer.parseInt(betAmount);
+        int thisCycleNumber = this.season.getCycleNumber();
         if (!this.season.isGameWasBegin()) {
-           Game gamblingGame = null;
-            switch (gameId){
-                case 1:
-                    gamblingGame = this.season.getGame1();
-                    break;
-                case 2:
-                    gamblingGame = this.season.getGame2();
-                    break;
-                case 3:
-                    gamblingGame = this.season.getGame3();
-                    break;
-                case 4:
-                    gamblingGame = this.season.getGame4();
-                    break;
-            }
-            User user = new User(this.id, this.getBalanceForUser());
-            if (castBetAmount > user.getBalance()) {
-                basicResponse.setErrorCode(YOUR_BALANCE_IS_SMALLER_THEN_BET);
-                return basicResponse;
-            }
-            BetComponent betComponent = new BetComponent(user, gamblingGame, castBetAmount, myGuess);
-            while (true){
-                if (betComponent.getGameOfGambling().isGameIsOver()){
-                    basicResponse.setBalance(betComponent.updateBalance()); // עדכון balance בשרת
-                    dbUtils.updateBalance(this.id,betComponent.updateBalance()); // עדכון balance בDB
+            while (true) {
+                if (this.season.getCycleNumber() == thisCycleNumber+PASS_TO_THE_NEXT){
+                    Game gamblingGame = null;
+                    switch (gameId){
+                        case GAME_ONE_ID:
+                            gamblingGame = this.season.getGame1();
+                            break;
+                        case GAME_TWO_ID:
+                            gamblingGame = this.season.getGame2();
+                            break;
+                        case GAME_THREE_ID:
+                            gamblingGame = this.season.getGame3();
+                            break;
+                        case GAME_FOUR_ID:
+                            gamblingGame = this.season.getGame4();
+                            break;
+                    }
+                    User user = new User(this.id, this.getBalanceForUser());
+                    if (castBetAmount > user.getBalance()) {
+                        basicResponse.setErrorCode(YOUR_BALANCE_IS_SMALLER_THEN_BET);
+                        return basicResponse;
+                    }
+                    BetComponent betComponent = new BetComponent(user, gamblingGame, castBetAmount, myGuess);
+                    while (true){
+                        if (betComponent.getGameOfGambling().isGameIsOver()){
+                            basicResponse.setBalance(betComponent.updateBalance()); // עדכון balance בשרת
+                            dbUtils.updateBalance(this.id,betComponent.updateBalance()); // עדכון balance בDB
+                            break;
+                        }
+                    }
                     break;
                 }
             }
+
         } else {
             basicResponse.setErrorCode(GAME_WAS_BEGIN);
             return basicResponse;
@@ -180,7 +179,7 @@ private final int GAME_FOUR_ID='4';
     public BasicResponse singUp (String name, String password, String email) {
             User userToAdd = new User(name,password,email,BALANCE_START_SUM);
         BasicResponse basicResponse = new BasicResponse();
-        if (password.length()>=9) {  // להוסיף עוד תנאים לסיסמא חזקה
+        if (password.length()>=PASSWORD_LENGTH) {  // להוסיף עוד תנאים לסיסמא חזקה
             if (!dbUtils.checkIfUserExist(email)) {
                basicResponse.setId((dbUtils.addUser(userToAdd)));
                basicResponse.updateSuccess(); // אם קיים ID אזי הSUCCESS יהפוך לTRUE

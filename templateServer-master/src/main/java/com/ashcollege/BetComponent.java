@@ -6,6 +6,11 @@ import com.ashcollege.entities.User;
 import com.ashcollege.utils.DbUtils;
 
 public class BetComponent  {
+    private static final int DEAFULT_BET_AMOUNT=0;
+    private static final char HOME_CHOOSE='1';
+    private static final char GUEST_CHOOSE='2';
+    private static final char DRAW_CHOOSE='x';
+
     private User gambler;
     private Game gameOfGambling;
     private int betAmount;
@@ -24,7 +29,7 @@ public class BetComponent  {
     public BetComponent(Team home,Team guest){
         Game gameOfGambling = new Game(home,guest);
         this.gameOfGambling=gameOfGambling;
-        this.betAmount=0;
+        this.betAmount=DEAFULT_BET_AMOUNT;
     }
 
     public double getUpBalance() {
@@ -44,11 +49,11 @@ public class BetComponent  {
     }
     public double updateBalance() { // TODO: ****  לוודא שאכן מתעדכן במשתמש אחרת להוסיף משתמש בקלאס של משחק
         double updateBalance = this.gambler.getBalance() - this.betAmount;
-        if (updateBalance >= 0 ) {
+        if (updateBalance >= DEAFULT_BET_AMOUNT ) {
             if (gameOfGambling.getWin() == this.myGuess) { // אם המהמר צדק
-                if (myGuess == '1') { // קבוצת בית ניצחה
+                if (myGuess == HOME_CHOOSE) { // קבוצת בית ניצחה
                     updateBalance += this.betAmount * this.gameOfGambling.getBetRatioHome();
-                } else if (myGuess == '2') { //  קבוצת חוץ ניצחה
+                } else if (myGuess == GUEST_CHOOSE) { //  קבוצת חוץ ניצחה
                     updateBalance += this.betAmount * this.gameOfGambling.getBetRatioGuest();
                 } else { // תיקו
                     updateBalance += this.betAmount * this.gameOfGambling.getBetRatioDraw();
