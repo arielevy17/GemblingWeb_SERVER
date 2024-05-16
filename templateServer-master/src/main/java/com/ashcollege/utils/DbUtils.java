@@ -46,21 +46,6 @@ public class DbUtils {
         return isExist;
     }
 
-    public void setBalance(int id,double newBalance){ // עידכון סכום במסד הנתונים **** TODO
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(
-                    "SELECT balance FROM gambling_web_users WHERE id = ?");
-            preparedStatement.setInt(1,id);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                preparedStatement = connection.prepareStatement("INSERT INTO gambling_web_users (balance) VALUES ?");
-                preparedStatement.setDouble(1,newBalance);
-                preparedStatement.executeUpdate();
-            }
-        }  catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     public int addUser (User user) {
         int id = DEFAULT_ID;
@@ -94,9 +79,6 @@ public class DbUtils {
         return balance;
     }
 
-
-//   TODO;  לא מעדכן לבדוק אולי הבעיה בזה שהאוביקט בגנרל קונטרולר לא מוגדר?!! י
-    // בודקת את התנאים שהוזנו אל מול מסד הנתונים ואם אכן הפרטים נכונים מחזיר את הID של אותו משתמש
     public int login (String name, String password,String email) {
         int loginUserId = DEFAULT_ID;
         try {
@@ -126,10 +108,49 @@ public class DbUtils {
         System.err.println("Error updating object: " + e.getMessage());
     }
 }
+    public boolean updateName (int id,String newName){
+        boolean ans = false;
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    "UPDATE gambling_web_users SET name = ? WHERE id = ?");
+            preparedStatement.setString(1, newName);
+            preparedStatement.setInt(2, id);
+            int rowsUpdated = preparedStatement.executeUpdate();
+            ans = true;
+        } catch (SQLException e) {
+            System.err.println("Error updating object: " + e.getMessage());
+        }
+        return ans;
+    }
 
+    public boolean updatePassword (int id,String newPassword){
+        boolean ans = false;
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    "UPDATE gambling_web_users SET password = ? WHERE id = ?");
+            preparedStatement.setString(1, newPassword);
+            preparedStatement.setInt(2, id);
+            int rowsUpdated = preparedStatement.executeUpdate();
+            ans = true;
+        } catch (SQLException e) {
+            System.err.println("Error updating object: " + e.getMessage());
+        }
+        return ans;
+    }
 
-
-
-
+    public boolean updateEmail (int id,String newEmail){
+        boolean ans = false;
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    "UPDATE gambling_web_users SET email = ? WHERE id = ?");
+            preparedStatement.setString(1, newEmail);
+            preparedStatement.setInt(2, id);
+            int rowsUpdated = preparedStatement.executeUpdate();
+            ans = true;
+        } catch (SQLException e) {
+            System.err.println("Error updating object: " + e.getMessage());
+        }
+        return ans;
+    }
 
 }

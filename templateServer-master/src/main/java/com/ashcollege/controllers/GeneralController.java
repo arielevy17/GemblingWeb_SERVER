@@ -32,6 +32,8 @@ private static final int GAME_FOUR_ID=4;
     private static final int USER_PASSWORD_IS_WEEK=3;
     private static final int YOUR_BALANCE_IS_SMALLER_THEN_BET=4;
     private static final int GAME_WAS_BEGIN=5;
+    private static final int USER_UPDATE_FAIL=6;
+
     private static final int BALANCE_START_SUM=1000;
     private final int ALL_GAME_NUMBER=4;
     private final int PASS_TO_THE_NEXT=1;
@@ -89,6 +91,7 @@ private static final int GAME_FOUR_ID=4;
 
             return basicResponse;
         }
+
 
     @RequestMapping(value = "/get_id_for_user" ,method = {RequestMethod.GET, RequestMethod.POST})
     public double getIdForUser() {
@@ -175,21 +178,54 @@ private static final int GAME_FOUR_ID=4;
          return basicResponse;
     }
 
+    @RequestMapping(value = "/update_username", method = {RequestMethod.GET, RequestMethod.POST})
+    public BasicResponse updateName (String name) {
+        BasicResponse basicResponse = new BasicResponse();
+        basicResponse.setId(this.id);
+        basicResponse.setSuccess(dbUtils.updateName(this.id,name));
+        if (!basicResponse.getSuccess()){
+            basicResponse.setErrorCode(USER_UPDATE_FAIL);
+        }
+        return basicResponse;
+    }
+
+    @RequestMapping(value = "/update_password", method = {RequestMethod.GET, RequestMethod.POST})
+    public BasicResponse updatePassword (String password) {
+        BasicResponse basicResponse = new BasicResponse();
+        basicResponse.setId(this.id);
+        basicResponse.setSuccess(dbUtils.updatePassword(this.id,password));
+        if (!basicResponse.getSuccess()){
+            basicResponse.setErrorCode(USER_PASSWORD_IS_WEEK);
+        }
+        return basicResponse;
+    }
+
+    @RequestMapping(value = "/update_email", method = {RequestMethod.GET, RequestMethod.POST})
+    public BasicResponse updateEmail (String email) {
+        BasicResponse basicResponse = new BasicResponse();
+        basicResponse.setId(this.id);
+        basicResponse.setSuccess(dbUtils.updateEmail(this.id,email));
+        if (!basicResponse.getSuccess()){
+            basicResponse.setErrorCode(USER_ALREADY_EXIST);
+        }
+        return basicResponse;
+    }
+
     @RequestMapping(value = "/sing_up", method = {RequestMethod.GET, RequestMethod.POST})
     public BasicResponse singUp (String name, String password, String email) {
-            User userToAdd = new User(name,password,email,BALANCE_START_SUM);
+        User userToAdd = new User(name,password,email,BALANCE_START_SUM);
         BasicResponse basicResponse = new BasicResponse();
         if (password.length()>=PASSWORD_LENGTH) {  // להוסיף עוד תנאים לסיסמא חזקה
             if (!dbUtils.checkIfUserExist(email)) {
-               basicResponse.setId((dbUtils.addUser(userToAdd)));
-               basicResponse.updateSuccess(); // אם קיים ID אזי הSUCCESS יהפוך לTRUE
+                basicResponse.setId((dbUtils.addUser(userToAdd)));
+                basicResponse.updateSuccess(); // אם קיים ID אזי הSUCCESS יהפוך לTRUE
             } else {
                 basicResponse.setErrorCode(USER_ALREADY_EXIST);
             }
         } else {
             basicResponse.setErrorCode(USER_PASSWORD_IS_WEEK);
         }
-          return basicResponse;
+        return basicResponse;
     }
 
 
