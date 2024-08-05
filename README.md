@@ -6,4 +6,5 @@ Runs the game by a probability algorithm for a goal in every given minute of pla
 Publishes the result, and according to the bet the user updates his financial account in the database.
 
 ** The server side of the site! **
+
 The technologie used: Spring Boot , Hibernat , SQL database
