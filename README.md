@@ -8,6 +8,6 @@ In this project I created a simulation of a soccer league where several teams co
 -Users will be able to register on the site and bet on game results, with a betting system that reflects the odds based on the team's performance. 
 - The project includes user registration and login, team and game management, dynamic match results generator and live dashboards to track ongoing games and individual bets.
 
-**  The server side of the site!  **
+** The server side of the site! **
 
 The technologie used: Spring Boot , Hibernat , SQL database
